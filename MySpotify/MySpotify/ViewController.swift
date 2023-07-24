@@ -10,8 +10,7 @@ import UIKit
 class ViewController: UIViewController {
 
     var coverImage = UIImageView()
-    var topBackgroundGradientView = UIView()
-    var bottomBackgroundGradientView = UIView()
+    var gradientView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,36 +30,35 @@ class ViewController: UIViewController {
         coverImage.backgroundColor = nil
         coverImage.tintColor = pinkColor
         
-        addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 1, y: 1)))
+        addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
         
-        topBackgroundGradientView.frame = CGRect(x: view.bounds.minX, y: view.bounds.minY, width: view.bounds.width, height: view.bounds.maxY/3)
+       // addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 1, y: 1)))
+                
+        gradientView.frame = view.bounds
+
+        // Create custom gradient layer for the first two colors (horizontal)
+        let horizontalGradientLayer = addGradientBackground(to: gradientView, colors: [blueColor,lilacColor], locate: (CGPoint(x: 0.0, y: 0.0),CGPoint(x: 1.0, y: 0.0)))
         
-        bottomBackgroundGradientView.frame = CGRect(x: view.bounds.minX, y: view.bounds.maxY/3, width: view.bounds.width, height: view.bounds.maxY/8)
+        // Create custom gradient layer for the third color (vertical)
+        let verticalGradientLayer = addGradientBackground(to: gradientView, colors: [UIColor.clear,grayColor], locate: (CGPoint(x: 0.3, y: 0.0),CGPoint(x: 0.3, y: 1.0)), locations: [0.0,0.5, 1.0])
         
-        addGradientBackground(to: topBackgroundGradientView, colors: [blueColor, lilacColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 1, y: 0)),locations: [0.0, 1.0])
-        
-        addGradientBackground(to: bottomBackgroundGradientView, colors: [lilacColor,grayColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 0, y: 1)), locations: [0.0,1.0])
-        
+        verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, grayColor.cgColor]
         
         view.backgroundColor =  grayColor
-        view.addSubview(topBackgroundGradientView)
-        view.addSubview(bottomBackgroundGradientView)
-        
-        
-       
-        
+        view.addSubview(gradientView)
         view.addSubview(coverImage)
-        
-        
-        // Do any additional setup after loading the view.
+       
+
     }
     
-    func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) {
+    func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
 
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = colors.map { $0.cgColor }
         gradientLayer.frame = view.bounds
         gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         
         if let locate = locate {
             gradientLayer.startPoint = locate.stat
@@ -71,7 +69,8 @@ class ViewController: UIViewController {
             gradientLayer.locations = locate
         }
         
-        view.layer.insertSublayer(gradientLayer, at: 0)
+        view.layer.addSublayer(gradientLayer)
+        return gradientLayer
     }
     
     
