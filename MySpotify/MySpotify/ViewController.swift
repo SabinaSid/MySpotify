@@ -11,6 +11,7 @@ class ViewController: UIViewController {
 
     var coverImage = UIImageView()
     var gradientView = UIView()
+    var verticalStackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +22,15 @@ class ViewController: UIViewController {
         let lilacColor = UIColor(red: 204/255, green: 103/255, blue: 199/255, alpha: 1.0)
         let grayColor = UIColor(red: 45/255, green: 49/255, blue: 52/255, alpha: 1.0)
  
-    
+        verticalStackView.axis = .vertical
+        verticalStackView.alignment = .fill
+        verticalStackView.distribution = .fillEqually
+        verticalStackView.spacing = 32
+        
+        viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
+        viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
+        
+       
         
         coverImage.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
         coverImage.center = view.center
@@ -44,11 +53,35 @@ class ViewController: UIViewController {
         
         verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, grayColor.cgColor]
         
+        
+        
         view.backgroundColor =  grayColor
         view.addSubview(gradientView)
-        view.addSubview(coverImage)
-       
+        //view.addSubview(coverImage)
+        view.addSubview(verticalStackView)
+        
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: view.bounds.height/3),
+                    verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                    verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+                ])
 
+    }
+    
+    func viewTrack(_ track: Track)  {
+        let itemTrackView = ItemTrackView()
+        itemTrackView.configure(track: track)
+        verticalStackView.addArrangedSubview(itemTrackView)
+        
+        // Add tap gesture recognizer to the UIImageView
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        
+        coverImage.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func imageTapped()  {
+        
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
