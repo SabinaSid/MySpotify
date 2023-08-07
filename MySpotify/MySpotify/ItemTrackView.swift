@@ -8,6 +8,7 @@
 import UIKit
 
 class ItemTrackView: UIView {
+    var track: Track!
     let trackNameLabel = UILabel()
     let coverImage = UIImageView()
     let durationLabel = UILabel()
@@ -81,6 +82,8 @@ class ItemTrackView: UIView {
     }
     
     func configure(track: Track) {
+        self.track = track
+        
         if let coverImage = track.coverImage {
             self.coverImage.image = coverImage
         } else {

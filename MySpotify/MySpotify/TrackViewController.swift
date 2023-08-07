@@ -19,20 +19,24 @@ class TrackViewController: UIViewController {
     var coverImage = UIImageView()
     var gradientView = UIView()
     
-    var track: Track = Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron")
+    var track: Track! //= Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print(track.name)
         coverImage.frame = CGRect(x: 0, y: 0, width: 350, height: 350)
         coverImage.center = view.center
-        coverImage.image = UIImage(systemName: "music.note")
         coverImage.contentMode = .scaleAspectFit
         coverImage.backgroundColor = nil
-        coverImage.tintColor = pinkColor
         
-        addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
-        
+        if let image = track.coverImage {
+            coverImage.image = image
+        } else {
+            coverImage.image = UIImage(systemName: "music.note")
+            coverImage.tintColor = pinkColor
+            addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
+        }
+                
        // addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 1, y: 1)))
                 
         gradientView.frame = view.bounds

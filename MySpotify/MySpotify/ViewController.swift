@@ -8,8 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    var coverImage = UIImageView()
+    
     var gradientView = UIView()
     var verticalStackView = UIStackView()
     
@@ -28,21 +27,8 @@ class ViewController: UIViewController {
         verticalStackView.spacing = 32
         
         viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
-        viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
+        viewTrack(Track(name: "Gangsta's Paradise", artist: "Coolio", audioResource: "Gangsta paradise"))
         
-       
-        
-        coverImage.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-        coverImage.center = view.center
-        coverImage.image = UIImage(systemName: "music.note")
-        coverImage.contentMode = .scaleAspectFit
-        coverImage.backgroundColor = nil
-        coverImage.tintColor = pinkColor
-        
-        addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
-        
-       // addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor], locate: (CGPoint(x: 0, y: 0),CGPoint(x: 1, y: 1)))
-                
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
@@ -57,7 +43,6 @@ class ViewController: UIViewController {
         
         view.backgroundColor =  grayColor
         view.addSubview(gradientView)
-        //view.addSubview(coverImage)
         view.addSubview(verticalStackView)
         
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,14 +59,23 @@ class ViewController: UIViewController {
         itemTrackView.configure(track: track)
         verticalStackView.addArrangedSubview(itemTrackView)
         
-        // Add tap gesture recognizer to the UIImageView
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         
-        coverImage.addGestureRecognizer(tapGesture)
+        // Adding tap gesture recognizer to the UIImageView
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+
+        itemTrackView.addGestureRecognizer(tapGesture)
+        //itemTrackView.coverImage.addGestureRecognizer(tapGesture)
+         
     }
     
-    @objc func imageTapped()  {
+    @objc func imageTapped(_ sender: UITapGestureRecognizer)  {
         
+        if let track = (sender.view as? ItemTrackView)?.track {
+            if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
+                newViewController.track = track
+                self.present(newViewController, animated: true)
+            }
+        }
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {

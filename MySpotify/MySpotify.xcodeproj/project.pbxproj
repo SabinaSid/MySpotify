@@ -17,6 +17,7 @@
 		48C863602A714E60007577E0 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C8635F2A714E60007577E0 /* Track.swift */; };
 		48C863622A71534D007577E0 /* oxxxymiron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 48C863612A71534D007577E0 /* oxxxymiron.mp3 */; };
 		48C863642A716358007577E0 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C863632A716358007577E0 /* TrackViewController.swift */; };
+		48C863662A796671007577E0 /* Gangsta paradise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 48C863652A796671007577E0 /* Gangsta paradise.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		48C8635F2A714E60007577E0 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		48C863612A71534D007577E0 /* oxxxymiron.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oxxxymiron.mp3; sourceTree = "<group>"; };
 		48C863632A716358007577E0 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
+		48C863652A796671007577E0 /* Gangsta paradise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Gangsta paradise.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				48C8635D2A714DC6007577E0 /* ItemTrackView.swift */,
 				48C8635F2A714E60007577E0 /* Track.swift */,
 				48C863612A71534D007577E0 /* oxxxymiron.mp3 */,
+				48C863652A796671007577E0 /* Gangsta paradise.mp3 */,
 				48C863632A716358007577E0 /* TrackViewController.swift */,
 				480A40092A69781800FA1E24 /* Main.storyboard */,
 				480A400C2A69781900FA1E24 /* Assets.xcassets */,
@@ -141,6 +144,7 @@
 				48C863622A71534D007577E0 /* oxxxymiron.mp3 in Resources */,
 				480A400D2A69781900FA1E24 /* Assets.xcassets in Resources */,
 				480A400B2A69781800FA1E24 /* Main.storyboard in Resources */,
+				48C863662A796671007577E0 /* Gangsta paradise.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
