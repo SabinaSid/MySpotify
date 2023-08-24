@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class TrackViewController: UIViewController {
     
     let pinkColor = UIColor(red: 254/255, green: 1/255, blue: 169/255, alpha: 0.9)
@@ -23,6 +22,8 @@ class TrackViewController: UIViewController {
     let artistNameLabel = UILabel()
     let slider =  UISlider()
     let playButton = UIButton(type: .system)
+    let currentTimeLabel = UILabel()
+    let timeToEndLabel = UILabel()
     
     
     var track: Track! //= Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron")
@@ -79,15 +80,31 @@ class TrackViewController: UIViewController {
         artistNameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(artistNameLabel)
         
+        currentTimeLabel.text = timeString(from: track.player.currentTime)
+        currentTimeLabel.textAlignment = .left
+        currentTimeLabel.font = UIFont.systemFont(ofSize: 12)
+        currentTimeLabel.textColor = UIColor.lightGray
+        currentTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(currentTimeLabel)
         
         slider.minimumValue = 0
         slider.maximumValue = Float(track.player.duration)
         slider.value = 0
         
-        slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .allTouchEvents)
+        slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .touchUpInside)
+       
+        // Добавляем наблюдение за изменениями свойства currentTime
+        track.player.addObserver(self, forKeyPath: "currentTime", options: .new, context: nil)
         
         slider.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(slider)
+        
+        timeToEndLabel.text = timeString(from: track.player.duration)
+        timeToEndLabel.textAlignment = .left
+        timeToEndLabel.font = UIFont.systemFont(ofSize: 12)
+        timeToEndLabel.textColor = UIColor.lightGray
+        timeToEndLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(timeToEndLabel)
         
         
         if let playImage = UIImage(systemName: "play.fill") {
@@ -117,7 +134,13 @@ class TrackViewController: UIViewController {
             
             slider.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 32),
             slider.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            slider.widthAnchor.constraint(equalToConstant: 350),
+            slider.widthAnchor.constraint(equalToConstant: 310),
+            
+            currentTimeLabel.topAnchor.constraint(equalTo: slider.topAnchor, constant: 8),
+            currentTimeLabel.leadingAnchor.constraint(equalTo: slider.leadingAnchor, constant: -35),
+            
+            timeToEndLabel.topAnchor.constraint(equalTo: slider.topAnchor, constant: 8),
+            timeToEndLabel.trailingAnchor.constraint(equalTo: slider.trailingAnchor, constant: 35),
             
             playButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -130,7 +153,24 @@ class TrackViewController: UIViewController {
     
     @objc func sliderTouch(_ sender: UISlider) {
         track.player.currentTime = TimeInterval(sender.value)
+        currentTimeLabel.text = timeString(from: track.player.currentTime)
+        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
     }
+    
+    @objc func sliderValueChanged(_ sender: UISlider) {
+        slider.setValue(Float(track.player.currentTime), animated: true)
+        print(sender)
+    }
+    
+    func timeString(from timeInterval: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+
+        return formatter.string(from: timeInterval) ?? "0:00"
+    }
+    
     
     @objc func playButtonTouch(_ sender: UIButton) {
         

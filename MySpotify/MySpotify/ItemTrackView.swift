@@ -96,8 +96,7 @@ class ItemTrackView: UIView {
         
         trackNameLabel.text = track.name
         artistNameLabel.text = track.artist
-        durationLabel.text = track.player.duration.formatted()
-        
+        durationLabel.text = timeString(from: track.player.duration)
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
@@ -121,6 +120,14 @@ class ItemTrackView: UIView {
         view.layer.addSublayer(gradientLayer)
         return gradientLayer
     }
-        
+    
+    func timeString(from timeInterval: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+
+        return formatter.string(from: timeInterval) ?? "0:00"
+    }
     
 }
