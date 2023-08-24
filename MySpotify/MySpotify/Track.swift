@@ -8,7 +8,13 @@
 import UIKit
 import AVFoundation
 
-class Track: NSObject {
+protocol AudioPlayerDelegate: AnyObject {
+    func audioPlayer(_ audioPlayer: AVAudioPlayer, didChangeCurrentTime currentTime: TimeInterval)
+}
+
+class Track: NSObject  {
+    
+    
     var player = AVAudioPlayer()
     var name: String = "City"
     var artist: String = "oxxxymiron"
@@ -28,4 +34,6 @@ class Track: NSObject {
             print("ERROR")
         }
     }
+    
+
 }

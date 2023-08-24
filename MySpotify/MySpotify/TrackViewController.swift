@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class TrackViewController: UIViewController {
     
@@ -26,7 +27,10 @@ class TrackViewController: UIViewController {
     let timeToEndLabel = UILabel()
     
     
-    var track: Track! //= Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron")
+    var track: Track!
+    var timer: Timer?
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,9 +96,10 @@ class TrackViewController: UIViewController {
         slider.value = 0
         
         slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .touchUpInside)
+        slider.addTarget(self, action: #selector(sliderHold(_:)), for: .touchDragInside)
        
-        // Добавляем наблюдение за изменениями свойства currentTime
-        track.player.addObserver(self, forKeyPath: "currentTime", options: .new, context: nil)
+         // Запуск таймера с интервалом 1 секунда (или другим интервалом на ваш выбор)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
         
         slider.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(slider)
@@ -155,13 +160,15 @@ class TrackViewController: UIViewController {
         track.player.currentTime = TimeInterval(sender.value)
         currentTimeLabel.text = timeString(from: track.player.currentTime)
         timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
     }
     
-    @objc func sliderValueChanged(_ sender: UISlider) {
-        slider.setValue(Float(track.player.currentTime), animated: true)
-        print(sender)
+    @objc func sliderHold(_ sender: UISlider) {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabelsUI), userInfo: nil, repeats: true)
     }
     
+
     func timeString(from timeInterval: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -209,6 +216,21 @@ class TrackViewController: UIViewController {
         return gradientLayer
     }
     
+    @objc func updateSliderUI() {
+        if track.player.isPlaying{
+        slider.setValue(Float(track.player.currentTime), animated: true)
+        currentTimeLabel.text = timeString(from: track.player.currentTime)
+        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        }
+    }
+    
+    @objc func updateTimeLabelsUI() {
+        if track.player.isPlaying{
+        currentTimeLabel.text = timeString(from: track.player.currentTime)
+        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        }
+    }
+    
 
     /*
     // MARK: - Navigation
@@ -221,3 +243,4 @@ class TrackViewController: UIViewController {
     */
 
 }
+
