@@ -8,11 +8,8 @@
 import UIKit
 import AVFoundation
 
-protocol AudioPlayerDelegate: AnyObject {
-    func audioPlayer(_ audioPlayer: AVAudioPlayer, didChangeCurrentTime currentTime: TimeInterval)
-}
 
-class Track: NSObject  {
+class Track: NSObject {
     
     
     var player = AVAudioPlayer()

@@ -35,6 +35,8 @@ class TrackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        track.player.delegate = self
+        
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
@@ -98,8 +100,8 @@ class TrackViewController: UIViewController {
         slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderHold(_:)), for: .touchDragInside)
        
-         // Запуск таймера с интервалом 1 секунда (или другим интервалом на ваш выбор)
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
+        // Запуск таймера с интервалом 1 секунда
+       timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
         
         slider.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(slider)
@@ -160,6 +162,7 @@ class TrackViewController: UIViewController {
         track.player.currentTime = TimeInterval(sender.value)
         currentTimeLabel.text = timeString(from: track.player.currentTime)
         timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
     }
     
@@ -231,7 +234,6 @@ class TrackViewController: UIViewController {
         }
     }
     
-
     /*
     // MARK: - Navigation
 
@@ -244,3 +246,11 @@ class TrackViewController: UIViewController {
 
 }
 
+extension TrackViewController: AVAudioPlayerDelegate {
+   
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if let playImage = UIImage(systemName: "play.fill") {
+            playButton.setImage(playImage, for: .normal)
+        }
+    }
+}
