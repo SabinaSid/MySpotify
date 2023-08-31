@@ -23,10 +23,12 @@ class TrackViewController: UIViewController {
     let artistNameLabel = UILabel()
     let slider =  UISlider()
     let playButton = UIButton(type: .system)
+    let nextButton = UIButton(type: .system)
+    let backButton = UIButton(type: .system)
     let currentTimeLabel = UILabel()
     let timeToEndLabel = UILabel()
     
-    
+    var playlist: Playlist!
     var track: Track!
     var timer: Timer?
     
@@ -36,6 +38,8 @@ class TrackViewController: UIViewController {
         super.viewDidLoad()
         
         track.player.delegate = self
+        
+        print(playlist.tracks.firstIndex(of: track))
         
         gradientView.frame = view.bounds
 
@@ -122,7 +126,23 @@ class TrackViewController: UIViewController {
         playButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(playButton)
         
+        if let forwardImage = UIImage(systemName: "forward.end.fill") {
+            nextButton.setImage(forwardImage, for: .normal)
+        }
+        nextButton.tintColor = UIColor.white
+        nextButton.addTarget(self, action: #selector(nextButtonTouch(_:)), for: .touchUpInside)
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(nextButton)
         
+        if let backwardImage = UIImage(systemName: "backward.end.fill") {
+            backButton.setImage(backwardImage, for: .normal)
+        }
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(backButtonTouch(_:)), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backButton)
+        
+        playButtonTouch(playButton)
         
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 32),
@@ -152,7 +172,17 @@ class TrackViewController: UIViewController {
             playButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playButton.widthAnchor.constraint(equalToConstant: 50),
-            playButton.heightAnchor.constraint(equalToConstant: 50)
+            playButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            nextButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
+            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 42),
+            nextButton.widthAnchor.constraint(equalToConstant: 50),
+            nextButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            backButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
+            backButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -42),
+            backButton.widthAnchor.constraint(equalToConstant: 50),
+            backButton.heightAnchor.constraint(equalToConstant: 50)
             
             
         ])
@@ -195,6 +225,34 @@ class TrackViewController: UIViewController {
                 track.player.play()
             }
         }
+    }
+    
+    @objc func nextButtonTouch(_ sender:UIButton) {
+        if let currentIndex = playlist.tracks.firstIndex(of: track) {
+            if currentIndex + 1 < playlist.tracks.count {
+                changeTrack(playlist.tracks[currentIndex + 1])
+            } else if let first = playlist.tracks.first {
+                changeTrack(first)
+            }
+        }
+    }
+    
+    @objc func backButtonTouch(_ sender:UIButton) {
+        if let currentIndex = playlist.tracks.firstIndex(of: track) {
+            if currentIndex - 1 >= 0 {
+                changeTrack(playlist.tracks[currentIndex - 1])
+            } else if let last = playlist.tracks.last {
+                 changeTrack(last)
+                
+            }
+        }
+    }
+    
+    func changeTrack(_ track: Track) {
+        self.track.player.pause()
+        self.track = track
+        playlist.currentTrack = track
+        viewDidLoad()
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {

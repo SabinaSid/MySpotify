@@ -11,6 +11,8 @@ class ViewController: UIViewController {
     
     var gradientView = UIView()
     var verticalStackView = UIStackView()
+    var playList: Playlist!
+    var dataSource = DataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +28,13 @@ class ViewController: UIViewController {
         verticalStackView.distribution = .fillEqually
         verticalStackView.spacing = 32
         
-        viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
-        viewTrack(Track(name: "Gangsta's Paradise", artist: "Coolio", audioResource: "Gangsta paradise"))
+        playList = dataSource.playlist
+        
+        for item in playList.tracks {
+            viewTrack(item)
+        }
+        //viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
+        //viewTrack(Track(name: "Gangsta's Paradise", artist: "Coolio", audioResource: "Gangsta paradise"))
         
         gradientView.frame = view.bounds
 
@@ -56,19 +63,17 @@ class ViewController: UIViewController {
         itemTrackView.configure(track: track)
         verticalStackView.addArrangedSubview(itemTrackView)
         
-        
         // Adding tap gesture recognizer to the UIImageView
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
-
         itemTrackView.addGestureRecognizer(tapGesture)
-        //itemTrackView.coverImage.addGestureRecognizer(tapGesture)
-         
     }
     
     @objc func imageTapped(_ sender: UITapGestureRecognizer)  {
         
         if let track = (sender.view as? ItemTrackView)?.track {
             if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
+                newViewController.playlist = playList
+                playList.currentTrack = track
                 newViewController.track = track
                 self.present(newViewController, animated: true)
             }

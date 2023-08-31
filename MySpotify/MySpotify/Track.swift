@@ -11,7 +11,6 @@ import AVFoundation
 
 class Track: NSObject {
     
-    
     var player = AVAudioPlayer()
     var name: String = "City"
     var artist: String = "oxxxymiron"
