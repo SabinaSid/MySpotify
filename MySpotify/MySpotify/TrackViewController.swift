@@ -142,8 +142,7 @@ class TrackViewController: UIViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
         
-        
-        
+        playButtonTouch(playButton)
         
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 32),
@@ -230,51 +229,30 @@ class TrackViewController: UIViewController {
     
     @objc func nextButtonTouch(_ sender:UIButton) {
         if let currentIndex = playlist.tracks.firstIndex(of: track) {
-            print(currentIndex)
             if currentIndex + 1 < playlist.tracks.count {
-                print(playlist.tracks[currentIndex + 1].name)
-                openNewTrack(playlist.tracks[currentIndex + 1])
-            } else {
-                if let first = playlist.tracks.first {
-                    openNewTrack(first)
-                }
-                print(playlist.tracks.first?.name)
+                changeTrack(playlist.tracks[currentIndex + 1])
+            } else if let first = playlist.tracks.first {
+                changeTrack(first)
             }
         }
-        
     }
     
     @objc func backButtonTouch(_ sender:UIButton) {
         if let currentIndex = playlist.tracks.firstIndex(of: track) {
-            print(currentIndex)
             if currentIndex - 1 >= 0 {
-                print(playlist.tracks[currentIndex - 1].name)
-                openNewTrack(playlist.tracks[currentIndex - 1])
-            } else {
-                if let last = playlist.tracks.last {
-                    openNewTrack(last)
-                }
-                print(playlist.tracks.last?.name)
+                changeTrack(playlist.tracks[currentIndex - 1])
+            } else if let last = playlist.tracks.last {
+                 changeTrack(last)
+                
             }
         }
-        
     }
     
-    func openNewTrack(_ track: Track){
-       
-        if let newViewController = self.storyboard?.instantiateViewController(identifier: "TrackViewSB") as? TrackViewController {
-            newViewController.playlist = self.playlist
-            playlist.currentTrack = track
-            newViewController.track = track
-            self.present(newViewController, animated: true)
-        }
-        
-        /*???? НЕПОНЯТНА КАК МОДАЛЬНОЕ ОКНО ЗАКРЫТЬ
-        if let presentingViewController = self.presentingViewController {
-            presentingViewController.dismiss(animated: true, completion: {
-                // Здесь можете выполнить дополнительные действия после закрытия
-            })
-         */
+    func changeTrack(_ track: Track) {
+        self.track.player.pause()
+        self.track = track
+        playlist.currentTrack = track
+        viewDidLoad()
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
