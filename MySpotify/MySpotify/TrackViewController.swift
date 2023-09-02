@@ -25,6 +25,7 @@ class TrackViewController: UIViewController {
     let playButton = UIButton(type: .system)
     let nextButton = UIButton(type: .system)
     let backButton = UIButton(type: .system)
+    let repeatButton = UIButton(type: .system)
     let currentTimeLabel = UILabel()
     let timeToEndLabel = UILabel()
     
@@ -32,14 +33,17 @@ class TrackViewController: UIViewController {
     var track: Track!
     var timer: Timer?
     
-    
+    //TODO: Add images to tracks, round image
+    //TODO: Store a state of track to can dismiss modal window with track anf after open it again
+    //TODO: Store a state of track to can dismiss modal window with track and see what track playing now
+    //TODO: Add button to mix up tracks
+    //TODO: Add button to loop track/playlist
+    //TODO: Add button to share track
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         track.player.delegate = self
-        
-        print(playlist.tracks.firstIndex(of: track))
         
         gradientView.frame = view.bounds
 
@@ -142,6 +146,15 @@ class TrackViewController: UIViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
         
+        if let repeatImage = UIImage(systemName: "repeat") {
+            repeatButton.setImage(repeatImage, for: .normal)
+        }
+        repeatButton.tintColor = UIColor.white
+        repeatButton.addTarget(self, action: #selector(repeatButtonTouch(_:)), for: .touchUpInside)
+        repeatButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(repeatButton)
+        
+        //To start track when page open
         playButtonTouch(playButton)
         
         NSLayoutConstraint.activate([
@@ -182,7 +195,12 @@ class TrackViewController: UIViewController {
             backButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
             backButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -42),
             backButton.widthAnchor.constraint(equalToConstant: 50),
-            backButton.heightAnchor.constraint(equalToConstant: 50)
+            backButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            repeatButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
+            repeatButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -64),
+            repeatButton.widthAnchor.constraint(equalToConstant: 50),
+            repeatButton.heightAnchor.constraint(equalToConstant: 50)
             
             
         ])
@@ -231,8 +249,12 @@ class TrackViewController: UIViewController {
         if let currentIndex = playlist.tracks.firstIndex(of: track) {
             if currentIndex + 1 < playlist.tracks.count {
                 changeTrack(playlist.tracks[currentIndex + 1])
-            } else if let first = playlist.tracks.first {
-                changeTrack(first)
+            } else {
+                switch playlist.repeateState {
+                case.on:  if let first = playlist.tracks.first {changeTrack(first)}
+                default: break //TODO: STOP TRACK, MAYBE HIDE NEXT BUTTON
+                }
+              
             }
         }
     }
@@ -241,10 +263,46 @@ class TrackViewController: UIViewController {
         if let currentIndex = playlist.tracks.firstIndex(of: track) {
             if currentIndex - 1 >= 0 {
                 changeTrack(playlist.tracks[currentIndex - 1])
-            } else if let last = playlist.tracks.last {
-                 changeTrack(last)
-                
+            } else {
+                switch playlist.repeateState {
+                case.on :  if let last = playlist.tracks.last {changeTrack(last)}
+                default: break //TODO: STOP TRACK, MAYBE HIDE BACK BUTTON
+                }
             }
+           
+        }
+    }
+    
+    @objc func repeatButtonTouch(_ sender:UIButton) {
+        switch playlist.repeateState {
+        case .off:
+            playlist.repeateState = .on
+        case .on:
+            playlist.repeateState = .repeateOne
+        case .repeateOne:
+            playlist.repeateState = .off
+        }
+        
+        setImageOnRepeatButton()
+    }
+    
+    func setImageOnRepeatButton(){
+        switch playlist.repeateState {
+        case .off:
+            if let repeatImage = UIImage(systemName: "repeat") {
+                repeatButton.setImage(repeatImage, for: .normal)
+            }
+            repeatButton.tintColor = UIColor.white
+        case .on:
+            if let repeatImage = UIImage(systemName: "repeat") {
+                repeatButton.setImage(repeatImage, for: .normal)
+            }
+            repeatButton.tintColor = UIColor.green
+        case .repeateOne:
+            if let repeatImage = UIImage(systemName: "repeat.1") {
+                repeatButton.setImage(repeatImage, for: .normal)
+            }
+            repeatButton.tintColor = UIColor.green
         }
     }
     
