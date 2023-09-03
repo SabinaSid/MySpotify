@@ -103,7 +103,7 @@ class TrackViewController: UIViewController {
         
         slider.minimumValue = 0
         slider.maximumValue = Float(track.player.duration)
-        slider.value = 0
+        slider.value = Float(track.player.currentTime)
         
         slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderHold(_:)), for: .touchDragInside)
@@ -152,6 +152,7 @@ class TrackViewController: UIViewController {
         repeatButton.tintColor = UIColor.white
         repeatButton.addTarget(self, action: #selector(repeatButtonTouch(_:)), for: .touchUpInside)
         repeatButton.translatesAutoresizingMaskIntoConstraints = false
+        setImageOnRepeatButton()
         view.addSubview(repeatButton)
         
         //To start track when page open
@@ -201,8 +202,6 @@ class TrackViewController: UIViewController {
             repeatButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -64),
             repeatButton.widthAnchor.constraint(equalToConstant: 50),
             repeatButton.heightAnchor.constraint(equalToConstant: 50)
-            
-            
         ])
     }
     
@@ -246,30 +245,53 @@ class TrackViewController: UIViewController {
     }
     
     @objc func nextButtonTouch(_ sender:UIButton) {
-        if let currentIndex = playlist.tracks.firstIndex(of: track) {
-            if currentIndex + 1 < playlist.tracks.count {
-                changeTrack(playlist.tracks[currentIndex + 1])
-            } else {
-                switch playlist.repeateState {
-                case.on:  if let first = playlist.tracks.first {changeTrack(first)}
-                default: break //TODO: STOP TRACK, MAYBE HIDE NEXT BUTTON
+        switch playlist.repeateState {
+        case .off:
+            if let currentIndex = playlist.tracks.firstIndex(of: track) {
+                if currentIndex + 1 < playlist.tracks.count {
+                    changeTrack(playlist.tracks[currentIndex + 1])
                 }
-              
             }
+        case .on:
+            if let currentIndex = playlist.tracks.firstIndex(of: track) {
+                if currentIndex + 1 < playlist.tracks.count {
+                    changeTrack(playlist.tracks[currentIndex + 1])
+                    return
+                }
+            }
+            if let first = playlist.tracks.first {
+                changeTrack(first)
+                
+            }
+                
+        case .repeateOne:
+            changeTrack(track)
         }
+        
     }
     
     @objc func backButtonTouch(_ sender:UIButton) {
-        if let currentIndex = playlist.tracks.firstIndex(of: track) {
-            if currentIndex - 1 >= 0 {
-                changeTrack(playlist.tracks[currentIndex - 1])
-            } else {
-                switch playlist.repeateState {
-                case.on :  if let last = playlist.tracks.last {changeTrack(last)}
-                default: break //TODO: STOP TRACK, MAYBE HIDE BACK BUTTON
+        switch playlist.repeateState {
+        case .off:
+            if let currentIndex = playlist.tracks.firstIndex(of: track) {
+                if currentIndex - 1 >= 0 {
+                    changeTrack(playlist.tracks[currentIndex - 1])
                 }
             }
-           
+        case .on:
+            if let currentIndex = playlist.tracks.firstIndex(of: track) {
+                if currentIndex - 1 >= 0 {
+                    changeTrack(playlist.tracks[currentIndex - 1])
+                    return
+                }
+            }
+            if let last = playlist.tracks.last {
+                changeTrack(last)
+                
+            }
+                
+        case .repeateOne:
+            changeTrack(track)
         }
     }
     
@@ -307,9 +329,11 @@ class TrackViewController: UIViewController {
     }
     
     func changeTrack(_ track: Track) {
-        self.track.player.pause()
+        self.track.player.stop()
+        self.track.player.currentTime = 0
         self.track = track
         playlist.currentTrack = track
+        timer?.invalidate()
         viewDidLoad()
     }
     
@@ -365,8 +389,17 @@ class TrackViewController: UIViewController {
 extension TrackViewController: AVAudioPlayerDelegate {
    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if let playImage = UIImage(systemName: "play.fill") {
-            playButton.setImage(playImage, for: .normal)
+        switch playlist.repeateState {
+        case .repeateOne:
+            track.player.currentTime = 0
+            track.player.play()
+        case .on:
+            nextButtonTouch(nextButton)
+        case .off:
+            if let playImage = UIImage(systemName: "play.fill") {
+                playButton.setImage(playImage, for: .normal)
+            }
         }
+        
     }
 }
