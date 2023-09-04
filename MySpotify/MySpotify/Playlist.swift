@@ -9,7 +9,7 @@ import UIKit
 
 enum RepeateState {
     case off
-    case on
+    case loop
     case repeateOne
 }
 

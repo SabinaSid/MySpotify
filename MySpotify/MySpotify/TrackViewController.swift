@@ -136,6 +136,13 @@ class TrackViewController: UIViewController {
         nextButton.tintColor = UIColor.white
         nextButton.addTarget(self, action: #selector(nextButtonTouch(_:)), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        /*
+        // if it's last track and repeat state is off, hide button
+        if playlist.tracks.last === track && playlist.repeateState == .off {
+            nextButton.isEnabled = false
+        } else {nextButton.isEnabled = true}
+         */
         view.addSubview(nextButton)
         
         if let backwardImage = UIImage(systemName: "backward.end.fill") {
@@ -252,7 +259,7 @@ class TrackViewController: UIViewController {
                     changeTrack(playlist.tracks[currentIndex + 1])
                 }
             }
-        case .on:
+        case .loop:
             if let currentIndex = playlist.tracks.firstIndex(of: track) {
                 if currentIndex + 1 < playlist.tracks.count {
                     changeTrack(playlist.tracks[currentIndex + 1])
@@ -278,7 +285,7 @@ class TrackViewController: UIViewController {
                     changeTrack(playlist.tracks[currentIndex - 1])
                 }
             }
-        case .on:
+        case .loop:
             if let currentIndex = playlist.tracks.firstIndex(of: track) {
                 if currentIndex - 1 >= 0 {
                     changeTrack(playlist.tracks[currentIndex - 1])
@@ -298,8 +305,8 @@ class TrackViewController: UIViewController {
     @objc func repeatButtonTouch(_ sender:UIButton) {
         switch playlist.repeateState {
         case .off:
-            playlist.repeateState = .on
-        case .on:
+            playlist.repeateState = .loop
+        case .loop:
             playlist.repeateState = .repeateOne
         case .repeateOne:
             playlist.repeateState = .off
@@ -315,7 +322,7 @@ class TrackViewController: UIViewController {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
             repeatButton.tintColor = UIColor.white
-        case .on:
+        case .loop:
             if let repeatImage = UIImage(systemName: "repeat") {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
@@ -393,7 +400,7 @@ extension TrackViewController: AVAudioPlayerDelegate {
         case .repeateOne:
             track.player.currentTime = 0
             track.player.play()
-        case .on:
+        case .loop:
             nextButtonTouch(nextButton)
         case .off:
             if let playImage = UIImage(systemName: "play.fill") {
