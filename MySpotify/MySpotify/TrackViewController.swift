@@ -42,8 +42,11 @@ class TrackViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        track = playlist.currentTrack
         track.player.delegate = self
+        
+        print(playlist.isCurrentTrackLast())
+
         
         gradientView.frame = view.bounds
 
@@ -252,6 +255,11 @@ class TrackViewController: UIViewController {
     }
     
     @objc func nextButtonTouch(_ sender:UIButton) {
+        if let nextTrack = playlist.next() {
+            changeTrack(nextTrack)
+        }
+        
+        /*
         switch playlist.repeateState {
         case .off:
             if let currentIndex = playlist.tracks.firstIndex(of: track) {
@@ -274,10 +282,15 @@ class TrackViewController: UIViewController {
         case .repeateOne:
             changeTrack(track)
         }
+         */
         
     }
     
     @objc func backButtonTouch(_ sender:UIButton) {
+        if let previousTrack = playlist.back() {
+            changeTrack(previousTrack)
+        }
+        /*
         switch playlist.repeateState {
         case .off:
             if let currentIndex = playlist.tracks.firstIndex(of: track) {
@@ -300,6 +313,7 @@ class TrackViewController: UIViewController {
         case .repeateOne:
             changeTrack(track)
         }
+         */
     }
     
     @objc func repeatButtonTouch(_ sender:UIButton) {
@@ -336,10 +350,12 @@ class TrackViewController: UIViewController {
     }
     
     func changeTrack(_ track: Track) {
+        /*
         self.track.player.stop()
         self.track.player.currentTime = 0
         self.track = track
         playlist.currentTrack = track
+         */
         timer?.invalidate()
         viewDidLoad()
     }

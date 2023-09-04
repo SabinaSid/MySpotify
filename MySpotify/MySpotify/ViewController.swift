@@ -33,9 +33,7 @@ class ViewController: UIViewController {
         for item in playList.tracks {
             viewTrack(item)
         }
-        //viewTrack(Track(name: "City", artist: "Oxxxymiron", audioResource: "oxxxymiron"))
-        //viewTrack(Track(name: "Gangsta's Paradise", artist: "Coolio", audioResource: "Gangsta paradise"))
-        
+   
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
