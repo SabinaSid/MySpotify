@@ -285,7 +285,7 @@ class TrackViewController: UIViewController {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
             repeatButton.tintColor = UIColor.green
-        case .repeateOne:
+        case .repeatOne:
             if let repeatImage = UIImage(systemName: "repeat.1") {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
