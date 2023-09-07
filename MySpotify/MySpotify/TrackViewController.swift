@@ -10,12 +10,6 @@ import AVFoundation
 
 class TrackViewController: UIViewController {
     
-    let pinkColor = UIColor(red: 254/255, green: 1/255, blue: 169/255, alpha: 0.9)
-    let yellowColor = UIColor(red: 246/255, green: 195/255, blue: 82/255, alpha: 0.9)
-    let blueColor = UIColor(red: 107/255, green: 167/255, blue: 229/255, alpha: 1.0)
-    let lilacColor = UIColor(red: 204/255, green: 103/255, blue: 199/255, alpha: 1.0)
-    let grayColor = UIColor(red: 45/255, green: 49/255, blue: 52/255, alpha: 1.0)
-    
     let coverImage = UIImageView()
     let gradientView = UIView()
     let viewTitle = UILabel()
@@ -48,14 +42,14 @@ class TrackViewController: UIViewController {
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
-        let horizontalGradientLayer = addGradientBackground(to: gradientView, colors: [pinkColor,yellowColor], locate: (CGPoint(x: 0.0, y: 0.0),CGPoint(x: 1.0, y: 0.0)))
+        let horizontalGradientLayer = addGradientBackground(to: gradientView, colors: [CustomColors.pinkColor,CustomColors.yellowColor], locate: (CGPoint(x: 0.0, y: 0.0),CGPoint(x: 1.0, y: 0.0)))
         
         // Create custom gradient layer for the third color (vertical)
-        let verticalGradientLayer = addGradientBackground(to: gradientView, colors: [UIColor.clear,grayColor], locate: (CGPoint(x: 0.3, y: 0.0),CGPoint(x: 0.3, y: 1.0)), locations: [0.0,0.8, 1.0])
+        let verticalGradientLayer = addGradientBackground(to: gradientView, colors: [UIColor.clear,CustomColors.grayColor], locate: (CGPoint(x: 0.3, y: 0.0),CGPoint(x: 0.3, y: 1.0)), locations: [0.0,0.8, 1.0])
         
-        verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, grayColor.cgColor]
+        verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, CustomColors.grayColor.cgColor]
         
-        view.backgroundColor = grayColor
+        view.backgroundColor = CustomColors.grayColor
         view.addSubview(gradientView)
         
         viewTitle.text = "Now Playing"
@@ -74,8 +68,8 @@ class TrackViewController: UIViewController {
             coverImage.image = image
         } else {
             coverImage.image = UIImage(systemName: "music.note")
-            coverImage.tintColor = pinkColor
-            addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
+            coverImage.tintColor = CustomColors.pinkColor
+            addGradientBackground(to: coverImage, colors: [CustomColors.pinkColor, CustomColors.yellowColor])
         }
                 
         view.addSubview(coverImage)

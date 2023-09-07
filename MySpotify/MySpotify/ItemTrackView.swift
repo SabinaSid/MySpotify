@@ -14,11 +14,7 @@ class ItemTrackView: UIView {
     let durationLabel = UILabel()
     let artistNameLabel = UILabel ()
     
-    let pinkColor = UIColor(red: 254/255, green: 1/255, blue: 169/255, alpha: 0.9)
-    let yellowColor = UIColor(red: 246/255, green: 195/255, blue: 82/255, alpha: 0.9)
-    let blueColor = UIColor(red: 107/255, green: 167/255, blue: 229/255, alpha: 1.0)
-    let lilacColor = UIColor(red: 204/255, green: 103/255, blue: 199/255, alpha: 1.0)
-    let grayColor = UIColor(red: 45/255, green: 49/255, blue: 52/255, alpha: 1.0)
+
     
     
     override init(frame: CGRect) {
@@ -37,7 +33,7 @@ class ItemTrackView: UIView {
         coverImage.contentMode = .scaleAspectFit
         coverImage.clipsToBounds = true
         coverImage.backgroundColor = nil
-        coverImage.tintColor = pinkColor
+        coverImage.tintColor = CustomColors.pinkColor
         coverImage.isUserInteractionEnabled = true
         coverImage.translatesAutoresizingMaskIntoConstraints = false
         addSubview(coverImage)
@@ -90,8 +86,8 @@ class ItemTrackView: UIView {
             coverImage.image = UIImage(systemName: "music.note")
             coverImage.contentMode = .scaleAspectFit
             coverImage.backgroundColor = nil
-            coverImage.tintColor = pinkColor
-            addGradientBackground(to: coverImage, colors: [pinkColor, yellowColor])
+            coverImage.tintColor = CustomColors.pinkColor
+            addGradientBackground(to: coverImage, colors: [CustomColors.pinkColor, CustomColors.yellowColor])
         }
         
         trackNameLabel.text = track.name

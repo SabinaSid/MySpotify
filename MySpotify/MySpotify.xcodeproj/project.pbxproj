@@ -13,6 +13,7 @@
 		480A400B2A69781800FA1E24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 480A40092A69781800FA1E24 /* Main.storyboard */; };
 		480A400D2A69781900FA1E24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 480A400C2A69781900FA1E24 /* Assets.xcassets */; };
 		480A40102A69781900FA1E24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 480A400E2A69781900FA1E24 /* LaunchScreen.storyboard */; };
+		482E3C842AAA116100C16CE6 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482E3C832AAA116100C16CE6 /* CustomColors.swift */; };
 		48C395E42A9E41E200E9A20A /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C395E32A9E41E200E9A20A /* Playlist.swift */; };
 		48C395E62A9E437D00E9A20A /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C395E52A9E437D00E9A20A /* DataSource.swift */; };
 		48C8635E2A714DC6007577E0 /* ItemTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C8635D2A714DC6007577E0 /* ItemTrackView.swift */; };
@@ -31,6 +32,7 @@
 		480A400C2A69781900FA1E24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		480A400F2A69781900FA1E24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		480A40112A69781900FA1E24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		482E3C832AAA116100C16CE6 /* CustomColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
 		48C395E32A9E41E200E9A20A /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		48C395E52A9E437D00E9A20A /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		48C8635D2A714DC6007577E0 /* ItemTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTrackView.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				480A40052A69781800FA1E24 /* SceneDelegate.swift */,
 				480A40072A69781800FA1E24 /* ViewController.swift */,
 				48C8635D2A714DC6007577E0 /* ItemTrackView.swift */,
+				482E3C832AAA116100C16CE6 /* CustomColors.swift */,
 				48C8635F2A714E60007577E0 /* Track.swift */,
 				48C395E32A9E41E200E9A20A /* Playlist.swift */,
 				48C395E52A9E437D00E9A20A /* DataSource.swift */,
@@ -168,6 +171,7 @@
 				480A40062A69781800FA1E24 /* SceneDelegate.swift in Sources */,
 				48C863642A716358007577E0 /* TrackViewController.swift in Sources */,
 				48C395E62A9E437D00E9A20A /* DataSource.swift in Sources */,
+				482E3C842AAA116100C16CE6 /* CustomColors.swift in Sources */,
 				48C8635E2A714DC6007577E0 /* ItemTrackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,12 +17,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let pinkColor = UIColor(red: 254/255, green: 1/255, blue: 169/255, alpha: 0.9)
-        let yellowColor = UIColor(red: 246/255, green: 195/255, blue: 82/255, alpha: 0.9)
-        let blueColor = UIColor(red: 107/255, green: 167/255, blue: 229/255, alpha: 1.0)
-        let lilacColor = UIColor(red: 204/255, green: 103/255, blue: 199/255, alpha: 1.0)
-        let grayColor = UIColor(red: 45/255, green: 49/255, blue: 52/255, alpha: 1.0)
- 
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .fill
         verticalStackView.distribution = .fillEqually
@@ -40,13 +34,13 @@ class ViewController: UIViewController {
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
-        let horizontalGradientLayer = addGradientBackground(to: gradientView, colors: [blueColor,lilacColor], locate: (CGPoint(x: 0.0, y: 0.0),CGPoint(x: 1.0, y: 0.0)))
+        let horizontalGradientLayer = addGradientBackground(to: gradientView, colors: [CustomColors.blueColor,CustomColors.lilacColor], locate: (CGPoint(x: 0.0, y: 0.0),CGPoint(x: 1.0, y: 0.0)))
         
         // Create custom gradient layer for the third color (vertical)
-        let verticalGradientLayer = addGradientBackground(to: gradientView, colors: [UIColor.clear,grayColor], locate: (CGPoint(x: 0.3, y: 0.0),CGPoint(x: 0.3, y: 1.0)), locations: [0.0,0.5, 1.0])
+        let verticalGradientLayer = addGradientBackground(to: gradientView, colors: [UIColor.clear,CustomColors.grayColor], locate: (CGPoint(x: 0.3, y: 0.0),CGPoint(x: 0.3, y: 1.0)), locations: [0.0,0.5, 1.0])
         
-        verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, grayColor.cgColor]
-        view.backgroundColor =  grayColor
+        verticalGradientLayer.colors = [horizontalGradientLayer.colors as Any, CustomColors.grayColor.cgColor]
+        view.backgroundColor =  CustomColors.grayColor
         view.addSubview(gradientView)
         view.addSubview(verticalStackView)
         
