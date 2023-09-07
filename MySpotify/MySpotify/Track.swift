@@ -16,6 +16,10 @@ class Track: NSObject {
     var artist: String = "oxxxymiron"
     var coverImage: UIImage?
     
+    var isPlaying: Bool {
+        return player.isPlaying
+    }
+    
     init(name: String, artist: String, audioResource: String, audioType: String = "mp3", coverImage: UIImage? = nil) {
         self.name = name
         self.artist = artist

@@ -61,6 +61,8 @@ class ViewController: UIViewController {
         // Adding tap gesture recognizer to the UIImageView
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         itemTrackView.addGestureRecognizer(tapGesture)
+        
+        
     }
     
     @objc func imageTapped(_ sender: UITapGestureRecognizer)  {
@@ -69,6 +71,7 @@ class ViewController: UIViewController {
             if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
                 newViewController.playlist = playlist
                 playlist.changeTrack(track: track)
+                (sender.view as? ItemTrackView)?.changeState()
                 self.present(newViewController, animated: true)
             }
         }

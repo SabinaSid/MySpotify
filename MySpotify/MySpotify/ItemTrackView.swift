@@ -95,6 +95,14 @@ class ItemTrackView: UIView {
         durationLabel.text = timeString(from: track.player.duration)
     }
     
+    func changeState()  {
+        if track.isPlaying {
+            coverImage.image = UIImage(systemName: "play.fill")
+            return
+        }
+        coverImage.image = UIImage(systemName: "music.note")
+    }
+    
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
 
         let gradientLayer = CAGradientLayer()
