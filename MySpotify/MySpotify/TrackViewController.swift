@@ -42,9 +42,9 @@ class TrackViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        track = playlist.currentTrack
         track.player.delegate = self
-        
+                
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
@@ -213,7 +213,7 @@ class TrackViewController: UIViewController {
     }
     
     @objc func sliderTouch(_ sender: UISlider) {
-        track.player.currentTime = TimeInterval(sender.value)
+        playlist.rewindTo(newTime: TimeInterval(sender.value))
         currentTimeLabel.text = timeString(from: track.player.currentTime)
         timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
         timer?.invalidate()
@@ -221,6 +221,8 @@ class TrackViewController: UIViewController {
     }
     
     @objc func sliderHold(_ sender: UISlider) {
+        //currentTimeLabel.text = timeString(from: TimeInterval(sender.value))
+        //timeToEndLabel.text = timeString(from: track.player.duration - TimeInterval(sender.value))
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabelsUI), userInfo: nil, repeats: true)
     }
@@ -237,81 +239,37 @@ class TrackViewController: UIViewController {
     
     
     @objc func playButtonTouch(_ sender: UIButton) {
-        
-        if track.player.isPlaying {
+        if playlist.isPlaying {
             if let playImage = UIImage(systemName: "play.fill") {
                 playButton.setImage(playImage, for: .normal)
-                track.player.stop()
-            }
-        } else {
-            if let playImage = UIImage(systemName: "stop.fill") {
-                playButton.setImage(playImage, for: .normal)
-                track.player.play()
+                playlist.pause()
+                return
             }
         }
+        
+        if let playImage = UIImage(systemName: "stop.fill") {
+                playButton.setImage(playImage, for: .normal)
+            playlist.play()
+        }
+        
+        
+        
     }
     
     @objc func nextButtonTouch(_ sender:UIButton) {
-        switch playlist.repeateState {
-        case .off:
-            if let currentIndex = playlist.tracks.firstIndex(of: track) {
-                if currentIndex + 1 < playlist.tracks.count {
-                    changeTrack(playlist.tracks[currentIndex + 1])
-                }
-            }
-        case .loop:
-            if let currentIndex = playlist.tracks.firstIndex(of: track) {
-                if currentIndex + 1 < playlist.tracks.count {
-                    changeTrack(playlist.tracks[currentIndex + 1])
-                    return
-                }
-            }
-            if let first = playlist.tracks.first {
-                changeTrack(first)
-                
-            }
-                
-        case .repeateOne:
-            changeTrack(track)
+        if let _ = playlist.next() {
+            changeTrack()
         }
-        
     }
     
     @objc func backButtonTouch(_ sender:UIButton) {
-        switch playlist.repeateState {
-        case .off:
-            if let currentIndex = playlist.tracks.firstIndex(of: track) {
-                if currentIndex - 1 >= 0 {
-                    changeTrack(playlist.tracks[currentIndex - 1])
-                }
-            }
-        case .loop:
-            if let currentIndex = playlist.tracks.firstIndex(of: track) {
-                if currentIndex - 1 >= 0 {
-                    changeTrack(playlist.tracks[currentIndex - 1])
-                    return
-                }
-            }
-            if let last = playlist.tracks.last {
-                changeTrack(last)
-                
-            }
-                
-        case .repeateOne:
-            changeTrack(track)
+        if let _ = playlist.back() {
+            changeTrack()
         }
     }
     
     @objc func repeatButtonTouch(_ sender:UIButton) {
-        switch playlist.repeateState {
-        case .off:
-            playlist.repeateState = .loop
-        case .loop:
-            playlist.repeateState = .repeateOne
-        case .repeateOne:
-            playlist.repeateState = .off
-        }
-        
+        playlist.changeRepeateState()
         setImageOnRepeatButton()
     }
     
@@ -327,7 +285,7 @@ class TrackViewController: UIViewController {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
             repeatButton.tintColor = UIColor.green
-        case .repeateOne:
+        case .repeatOne:
             if let repeatImage = UIImage(systemName: "repeat.1") {
                 repeatButton.setImage(repeatImage, for: .normal)
             }
@@ -335,11 +293,7 @@ class TrackViewController: UIViewController {
         }
     }
     
-    func changeTrack(_ track: Track) {
-        self.track.player.stop()
-        self.track.player.currentTime = 0
-        self.track = track
-        playlist.currentTrack = track
+    func changeTrack() {
         timer?.invalidate()
         viewDidLoad()
     }
@@ -367,7 +321,7 @@ class TrackViewController: UIViewController {
     }
     
     @objc func updateSliderUI() {
-        if track.player.isPlaying{
+        if playlist.isPlaying{
         slider.setValue(Float(track.player.currentTime), animated: true)
         currentTimeLabel.text = timeString(from: track.player.currentTime)
         timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
@@ -375,7 +329,9 @@ class TrackViewController: UIViewController {
     }
     
     @objc func updateTimeLabelsUI() {
-        if track.player.isPlaying{
+        
+        
+        if playlist.isPlaying{
         currentTimeLabel.text = timeString(from: track.player.currentTime)
         timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
         }
@@ -396,17 +352,13 @@ class TrackViewController: UIViewController {
 extension TrackViewController: AVAudioPlayerDelegate {
    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        switch playlist.repeateState {
-        case .repeateOne:
-            track.player.currentTime = 0
-            track.player.play()
-        case .loop:
-            nextButtonTouch(nextButton)
-        case .off:
-            if let playImage = UIImage(systemName: "play.fill") {
-                playButton.setImage(playImage, for: .normal)
-            }
+        if let _ = playlist.next() {
+            changeTrack()
+            return
         }
         
+        if let playImage = UIImage(systemName: "play.fill") {
+            playButton.setImage(playImage, for: .normal)
+        }
     }
 }

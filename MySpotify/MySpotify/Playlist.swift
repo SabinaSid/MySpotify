@@ -7,18 +7,26 @@
 
 import UIKit
 
-enum RepeateState {
+enum RepeatState {
     case off
     case loop
-    case repeateOne
+    case repeatOne
 }
 
 class Playlist: NSObject {
     var tracks: [Track]
     var currentTrack: Track?
-    var repeateState =  RepeateState.off
+    var repeateState =  RepeatState.off
     
-    init(tracks: [Track] = [], currentTrack: Track? = nil, repeateState: RepeateState = .off) {
+    
+    var isPlaying: Bool {
+        if let currentTrack =  currentTrack {
+            return currentTrack.player.isPlaying
+        }
+        return false
+    }
+    
+    init(tracks: [Track] = [], currentTrack: Track, repeateState: RepeatState = .off) {
         self.tracks = tracks
         self.currentTrack = currentTrack
         self.repeateState = repeateState
@@ -26,7 +34,130 @@ class Playlist: NSObject {
     
     init(tracks: [Track] = []) {
         self.tracks = tracks
+        self.currentTrack = tracks.first
     }
+    
+    func isCurrentTrackLast() -> Bool {
+        if let currentTrack = currentTrack {
+            return currentTrack.isEqual(tracks.last)
+        }
+        return true
+    }
+    
+    func isCurrentTrackFirst() -> Bool {
+        if let currentTrack = currentTrack {
+            return currentTrack.isEqual(tracks.first)
+        }
+        return true
+    }
+    
+    private func changeTrack(index: Int)  {
+        currentTrack?.player.stop()
+        currentTrack?.player.currentTime = 0
+        currentTrack = tracks[index]
+    }
+    
+    func changeRepeateState()  {
+        switch repeateState {
+        case .off:
+            repeateState = .loop
+        case .loop:
+            repeateState = .repeatOne
+        case .repeatOne:
+            repeateState = .off
+        }
+    }
+    
+
+    func next() -> Track? {
+        switch repeateState {
+        case .off:
+            if isCurrentTrackLast() {
+                return nil
+            }
+            
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex + 1)
+                }
+            }
+            
+        case .loop:
+            if isCurrentTrackLast() {
+                changeTrack(index: tracks.startIndex)
+                return currentTrack
+            }
+            
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex + 1)
+                }
+            }
+            
+        case .repeatOne:
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex)
+                }
+            }
+        }
+        
+        return currentTrack
+    }
+    
+    func back() -> Track? {
+        switch repeateState {
+        case .off:
+            if isCurrentTrackFirst() {
+                return nil
+            }
+            
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex - 1)
+                }
+            }
+            
+        case .loop:
+            if isCurrentTrackFirst() {
+                changeTrack(index: tracks.endIndex - 1)
+                return currentTrack
+            }
+            
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex - 1)
+                }
+            }
+            
+        case .repeatOne:
+            if let currentTrack = currentTrack {
+                if let currentIndex = tracks.firstIndex(of: currentTrack) {
+                    changeTrack(index: currentIndex)
+                }
+            }
+        }
+        
+        return currentTrack
+    }
+        
+    func play() {
+        currentTrack?.player.play()
+    }
+    
+    func pause()  {
+        currentTrack?.player.pause()
+    }
+    
+    func stop() {
+        currentTrack?.player.stop()
+    }
+    
+    func rewindTo(newTime: TimeInterval)  {
+        currentTrack?.player.currentTime = newTime
+    }
+    
+    
     
 
     
