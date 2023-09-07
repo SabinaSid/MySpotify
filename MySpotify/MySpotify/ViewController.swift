@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     
     var gradientView = UIView()
     var verticalStackView = UIStackView()
-    var playList: Playlist!
+    var playlist: Playlist!
     var dataSource = DataSource()
     
     override func viewDidLoad() {
@@ -28,9 +28,12 @@ class ViewController: UIViewController {
         verticalStackView.distribution = .fillEqually
         verticalStackView.spacing = 32
         
-        playList = dataSource.playlist
+        if playlist == nil {
+            playlist = dataSource.playlist
+        }
+       
         
-        for item in playList.tracks {
+        for item in playlist.tracks {
             viewTrack(item)
         }
    
@@ -70,9 +73,8 @@ class ViewController: UIViewController {
         
         if let track = (sender.view as? ItemTrackView)?.track {
             if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
-                newViewController.playlist = playList
-                playList.currentTrack = track
-                newViewController.track = track
+                newViewController.playlist = playlist
+                playlist.changeTrack(track: track)
                 self.present(newViewController, animated: true)
             }
         }

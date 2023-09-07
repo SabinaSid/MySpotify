@@ -122,9 +122,9 @@ class TrackViewController: UIViewController {
         view.addSubview(timeToEndLabel)
         
         
-        if let playImage = UIImage(systemName: "play.fill") {
-            playButton.setImage(playImage, for: .normal)
-        }
+
+        setPlayButtonImage()
+        print (playlist.isPlaying, "viewDidLoad")
         playButton.tintColor = UIColor.white
         playButton.addTarget(self, action: #selector(playButtonTouch(_:)), for: .touchUpInside)
         playButton.translatesAutoresizingMaskIntoConstraints = false
@@ -162,8 +162,8 @@ class TrackViewController: UIViewController {
         setImageOnRepeatButton()
         view.addSubview(repeatButton)
         
-        //To start track when page open
-        playButtonTouch(playButton)
+        
+
         
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 32),
@@ -239,21 +239,22 @@ class TrackViewController: UIViewController {
     
     
     @objc func playButtonTouch(_ sender: UIButton) {
+        playlist.play()
+        setPlayButtonImage()
+    }
+    
+    func setPlayButtonImage()  {
+        
         if playlist.isPlaying {
-            if let playImage = UIImage(systemName: "play.fill") {
+            if let playImage = UIImage(systemName: "stop.fill") {
                 playButton.setImage(playImage, for: .normal)
-                playlist.pause()
                 return
             }
         }
-        
-        if let playImage = UIImage(systemName: "stop.fill") {
+       
+        if let playImage = UIImage(systemName: "play.fill") {
                 playButton.setImage(playImage, for: .normal)
-            playlist.play()
         }
-        
-        
-        
     }
     
     @objc func nextButtonTouch(_ sender:UIButton) {
@@ -356,9 +357,6 @@ extension TrackViewController: AVAudioPlayerDelegate {
             changeTrack()
             return
         }
-        
-        if let playImage = UIImage(systemName: "play.fill") {
-            playButton.setImage(playImage, for: .normal)
-        }
+        setPlayButtonImage()
     }
 }

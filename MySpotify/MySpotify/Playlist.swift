@@ -55,6 +55,14 @@ class Playlist: NSObject {
         currentTrack?.player.stop()
         currentTrack?.player.currentTime = 0
         currentTrack = tracks[index]
+        currentTrack?.player.play()
+    }
+    
+    func changeTrack(track: Track)  {
+        currentTrack?.player.stop()
+        currentTrack?.player.currentTime = 0
+        currentTrack = track
+        currentTrack?.player.play()
     }
     
     func changeRepeateState()  {
@@ -142,15 +150,11 @@ class Playlist: NSObject {
     }
         
     func play() {
+        if isPlaying {
+            currentTrack?.player.pause()
+            return
+        }
         currentTrack?.player.play()
-    }
-    
-    func pause()  {
-        currentTrack?.player.pause()
-    }
-    
-    func stop() {
-        currentTrack?.player.stop()
     }
     
     func rewindTo(newTime: TimeInterval)  {
