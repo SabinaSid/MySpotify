@@ -221,8 +221,8 @@ class TrackViewController: UIViewController {
     }
     
     @objc func sliderHold(_ sender: UISlider) {
-        //currentTimeLabel.text = timeString(from: TimeInterval(sender.value))
-        //timeToEndLabel.text = timeString(from: track.player.duration - TimeInterval(sender.value))
+        currentTimeLabel.text = timeString(from: TimeInterval(sender.value))
+        timeToEndLabel.text = timeString(from: track.player.duration - TimeInterval(sender.value))
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabelsUI), userInfo: nil, repeats: true)
     }
