@@ -92,7 +92,7 @@ class ItemTrackView: UIView {
         
         trackNameLabel.text = track.name
         artistNameLabel.text = track.artist
-        durationLabel.text = timeString(from: track.player.duration)
+        durationLabel.text = timeString(from: track.duration)
     }
     
     func changeState()  {

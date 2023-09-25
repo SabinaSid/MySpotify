@@ -37,7 +37,7 @@ class TrackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         track = playlist.currentTrack
-        track.player.delegate = self
+        track.delegate = self
                 
         gradientView.frame = view.bounds
 
@@ -88,7 +88,7 @@ class TrackViewController: UIViewController {
         artistNameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(artistNameLabel)
         
-        currentTimeLabel.text = timeString(from: track.player.currentTime)
+        currentTimeLabel.text = timeString(from: track.currentTime)
         currentTimeLabel.textAlignment = .left
         currentTimeLabel.font = UIFont.systemFont(ofSize: 12)
         currentTimeLabel.textColor = UIColor.lightGray
@@ -96,8 +96,8 @@ class TrackViewController: UIViewController {
         view.addSubview(currentTimeLabel)
         
         slider.minimumValue = 0
-        slider.maximumValue = Float(track.player.duration)
-        slider.value = Float(track.player.currentTime)
+        slider.maximumValue = Float(track.duration)
+        slider.value = Float(track.currentTime)
         
         slider.addTarget(self, action: #selector(sliderTouch(_:)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderHold(_:)), for: .touchDragInside)
@@ -108,7 +108,7 @@ class TrackViewController: UIViewController {
         slider.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(slider)
         
-        timeToEndLabel.text = timeString(from: track.player.duration)
+        timeToEndLabel.text = timeString(from: track.duration)
         timeToEndLabel.textAlignment = .left
         timeToEndLabel.font = UIFont.systemFont(ofSize: 12)
         timeToEndLabel.textColor = UIColor.lightGray
@@ -208,15 +208,15 @@ class TrackViewController: UIViewController {
     
     @objc func sliderTouch(_ sender: UISlider) {
         playlist.rewindTo(newTime: TimeInterval(sender.value))
-        currentTimeLabel.text = timeString(from: track.player.currentTime)
-        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        currentTimeLabel.text = timeString(from: track.currentTime)
+        timeToEndLabel.text = timeString(from: track.duration - track.currentTime)
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateSliderUI), userInfo: nil, repeats: true)
     }
     
     @objc func sliderHold(_ sender: UISlider) {
         currentTimeLabel.text = timeString(from: TimeInterval(sender.value))
-        timeToEndLabel.text = timeString(from: track.player.duration - TimeInterval(sender.value))
+        timeToEndLabel.text = timeString(from: track.duration - TimeInterval(sender.value))
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabelsUI), userInfo: nil, repeats: true)
     }
@@ -317,9 +317,9 @@ class TrackViewController: UIViewController {
     
     @objc func updateSliderUI() {
         if playlist.isPlaying{
-        slider.setValue(Float(track.player.currentTime), animated: true)
-        currentTimeLabel.text = timeString(from: track.player.currentTime)
-        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        slider.setValue(Float(track.currentTime), animated: true)
+        currentTimeLabel.text = timeString(from: track.currentTime)
+        timeToEndLabel.text = timeString(from: track.duration - track.currentTime)
         }
     }
     
@@ -327,8 +327,8 @@ class TrackViewController: UIViewController {
         
         
         if playlist.isPlaying{
-        currentTimeLabel.text = timeString(from: track.player.currentTime)
-        timeToEndLabel.text = timeString(from: track.player.duration - track.player.currentTime)
+        currentTimeLabel.text = timeString(from: track.currentTime)
+        timeToEndLabel.text = timeString(from: track.duration - track.currentTime)
         }
     }
     
@@ -344,9 +344,8 @@ class TrackViewController: UIViewController {
 
 }
 
-extension TrackViewController: AVAudioPlayerDelegate {
-   
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+extension TrackViewController: TrackDelegete {
+    func didFinishPlaying() {
         if let _ = playlist.next() {
             changeTrack()
             return
