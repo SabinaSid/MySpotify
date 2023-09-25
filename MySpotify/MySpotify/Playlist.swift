@@ -20,10 +20,11 @@ class Playlist: NSObject {
     
     
     var isPlaying: Bool {
-        if let currentTrack =  currentTrack {
-            return currentTrack.player.isPlaying
+        guard let currentTrack = currentTrack else {
+            return false
         }
-        return false
+        
+        return currentTrack.isPlaying
     }
     
     init(tracks: [Track] = [], currentTrack: Track, repeateState: RepeatState = .off) {
@@ -34,21 +35,23 @@ class Playlist: NSObject {
     
     init(tracks: [Track] = []) {
         self.tracks = tracks
-        self.currentTrack = tracks.first
     }
     
     func isCurrentTrackLast() -> Bool {
-        if let currentTrack = currentTrack {
-            return currentTrack.isEqual(tracks.last)
+        guard let currentTrack = currentTrack else {
+            return true
         }
-        return true
+        
+        return currentTrack.isEqual(tracks.last)
+        
     }
     
     func isCurrentTrackFirst() -> Bool {
-        if let currentTrack = currentTrack {
-            return currentTrack.isEqual(tracks.first)
+        guard let currentTrack = currentTrack else {
+            return true
         }
-        return true
+        
+        return currentTrack.isEqual(tracks.first)
     }
     
     private func changeTrack(index: Int)  {
@@ -78,75 +81,64 @@ class Playlist: NSObject {
     
 
     func next() -> Track? {
+        
+        guard let currentTrack = currentTrack else {
+            return nil
+        }
+        
+        guard let currentIndex = tracks.firstIndex(of: currentTrack) else {
+            return nil
+        }
+        
         switch repeateState {
         case .off:
             if isCurrentTrackLast() {
                 return nil
             }
-            
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex + 1)
-                }
-            }
+            changeTrack(index: currentIndex + 1)
             
         case .loop:
             if isCurrentTrackLast() {
                 changeTrack(index: tracks.startIndex)
-                return currentTrack
+                return self.currentTrack
             }
             
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex + 1)
-                }
-            }
+            changeTrack(index: currentIndex + 1)
             
         case .repeatOne:
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex)
-                }
-            }
+            changeTrack(index: currentIndex)
         }
-        
-        return currentTrack
+        return self.currentTrack
     }
     
     func back() -> Track? {
+        guard let currentTrack = currentTrack else {
+            return nil
+        }
+        
+        guard let currentIndex = tracks.firstIndex(of: currentTrack) else {
+            return nil
+        }
+        
         switch repeateState {
         case .off:
             if isCurrentTrackFirst() {
                 return nil
             }
-            
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex - 1)
-                }
-            }
+            changeTrack(index: currentIndex - 1)
             
         case .loop:
             if isCurrentTrackFirst() {
                 changeTrack(index: tracks.endIndex - 1)
-                return currentTrack
+                return self.currentTrack
             }
-            
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex - 1)
-                }
-            }
-            
+            changeTrack(index: currentIndex - 1)
+        
         case .repeatOne:
-            if let currentTrack = currentTrack {
-                if let currentIndex = tracks.firstIndex(of: currentTrack) {
-                    changeTrack(index: currentIndex)
-                }
-            }
+            changeTrack(index: currentIndex)
         }
         
-        return currentTrack
+        return self.currentTrack
     }
         
     func play() {

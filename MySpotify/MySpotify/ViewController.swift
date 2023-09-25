@@ -71,7 +71,7 @@ class ViewController: UIViewController {
             if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
                 newViewController.playlist = playlist
                 playlist.changeTrack(track: track)
-                (sender.view as? ItemTrackView)?.changeState()
+                //(sender.view as? ItemTrackView)?.changeState()
                 self.present(newViewController, animated: true)
             }
         }
