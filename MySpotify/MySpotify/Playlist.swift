@@ -24,7 +24,7 @@ class Playlist: NSObject {
             return false
         }
         
-        return currentTrack.isPlaying
+        return currentTrack.trackState == .playing
     }
     
     init(tracks: [Track] = [], currentTrack: Track, repeateState: RepeatState = .off) {

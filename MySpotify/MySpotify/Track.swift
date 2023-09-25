@@ -12,6 +12,12 @@ protocol TrackDelegete {
     func didFinishPlaying()
 }
 
+enum TrackState {
+    case playing
+    case paused
+    case stopped
+}
+
 class Track: NSObject {
     
     private var player = AVAudioPlayer()
@@ -19,9 +25,10 @@ class Track: NSObject {
     var artist: String = "oxxxymiron"
     var coverImage: UIImage?
     var delegate: TrackDelegete?
+    private var state: TrackState = .stopped
     
-    var isPlaying: Bool {
-        return player.isPlaying
+    var trackState: TrackState {
+        return state
     }
     
     var currentTime: TimeInterval {
@@ -51,15 +58,18 @@ class Track: NSObject {
     
     func pause() {
         player.pause()
+        state = .paused
     }
     
     func play() {
         player.play()
+        state = .playing
     }
     
     func stop() {
         player.stop()
         player.currentTime = 0
+        state = .stopped
     }
     
     func rewindTo(newTime: TimeInterval)  {

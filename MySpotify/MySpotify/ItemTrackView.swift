@@ -96,11 +96,11 @@ class ItemTrackView: UIView {
     }
     
     func changeState()  {
-        if track.isPlaying {
-            coverImage.image = UIImage(systemName: "play.fill")
-            return
+        switch track.trackState {
+        case .playing: coverImage.image = UIImage(systemName: "play.fill")
+        case .paused: coverImage.image = UIImage(systemName: "pause.fill")
+        case .stopped: coverImage.image = UIImage(systemName: "music.note")
         }
-        coverImage.image = UIImage(systemName: "music.note")
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
