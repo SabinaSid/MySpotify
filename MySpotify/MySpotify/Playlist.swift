@@ -55,13 +55,13 @@ class Playlist: NSObject {
     }
     
     private func changeTrack(index: Int)  {
-        currentTrack?.stop()
+        currentTrack?.reset()
         currentTrack = tracks[index]
         currentTrack?.play()
     }
     
     func changeTrack(track: Track)  {
-        currentTrack?.stop()
+        currentTrack?.reset()
         currentTrack = track
         currentTrack?.play()
     }

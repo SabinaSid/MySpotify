@@ -36,7 +36,7 @@ class TrackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         track = playlist.currentTrack
-        track.delegate = self
+        track.delegates.append(self)
                 
         gradientView.frame = view.bounds
 
@@ -203,6 +203,8 @@ class TrackViewController: UIViewController {
             repeatButton.widthAnchor.constraint(equalToConstant: 50),
             repeatButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        
+        print ("viewDidLoad f")
     }
     
     @objc func sliderTouch(_ sender: UISlider) {
@@ -344,6 +346,10 @@ class TrackViewController: UIViewController {
 }
 
 extension TrackViewController: TrackDelegete {
+    func didChangeState(newState: TrackState, track: Track) {
+        print("TrackVC: didChangeState \(newState)")
+    }
+    
     func didFinishPlaying() {
         if let _ = playlist.next() {
             changeTrack()

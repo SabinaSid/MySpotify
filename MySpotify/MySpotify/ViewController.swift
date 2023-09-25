@@ -13,10 +13,10 @@ class ViewController: UIViewController {
     var verticalStackView = UIStackView()
     var playlist: Playlist!
     var dataSource = DataSource()
+    var arrayItemViews = [ItemTrackView]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .fill
         verticalStackView.distribution = .fillEqually
@@ -29,8 +29,9 @@ class ViewController: UIViewController {
         
         for item in playlist.tracks {
             viewTrack(item)
+            item.delegates.append(self)
         }
-   
+        
         gradientView.frame = view.bounds
 
         // Create custom gradient layer for the first two colors (horizontal)
@@ -56,13 +57,13 @@ class ViewController: UIViewController {
     func viewTrack(_ track: Track)  {
         let itemTrackView = ItemTrackView()
         itemTrackView.configure(track: track)
+        
         verticalStackView.addArrangedSubview(itemTrackView)
         
         // Adding tap gesture recognizer to the UIImageView
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         itemTrackView.addGestureRecognizer(tapGesture)
-        
-        
+        arrayItemViews.append(itemTrackView)
     }
     
     @objc func imageTapped(_ sender: UITapGestureRecognizer)  {
@@ -71,7 +72,6 @@ class ViewController: UIViewController {
             if let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackViewSB") as? TrackViewController {
                 newViewController.playlist = playlist
                 playlist.changeTrack(track: track)
-                //(sender.view as? ItemTrackView)?.changeState()
                 self.present(newViewController, animated: true)
             }
         }
@@ -99,8 +99,23 @@ class ViewController: UIViewController {
         return gradientLayer
     }
     
+}
+
+extension ViewController: TrackDelegete {
+   
+    func didChangeState(newState: TrackState, track: Track) {
+        print("VC: \(track.name) \(newState)")
+        for item in arrayItemViews {
+            //item.track.delegates.ap = self
+            if item.track.isEqual(track){
+                item.changeState(newState: newState)
+            }
+        }
+    }
     
-
-
+    func didFinishPlaying() {
+        //ignore
+    }
+        
 }
 

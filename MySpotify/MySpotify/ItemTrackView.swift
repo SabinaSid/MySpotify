@@ -12,10 +12,7 @@ class ItemTrackView: UIView {
     let trackNameLabel = UILabel()
     let coverImage = UIImageView()
     let durationLabel = UILabel()
-    let artistNameLabel = UILabel ()
-    
-
-    
+    let artistNameLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -93,14 +90,20 @@ class ItemTrackView: UIView {
         trackNameLabel.text = track.name
         artistNameLabel.text = track.artist
         durationLabel.text = timeString(from: track.duration)
+       
     }
     
-    func changeState()  {
-        switch track.trackState {
-        case .playing: coverImage.image = UIImage(systemName: "play.fill")
+    func changeState(newState: TrackState)  {
+        switch newState {
+        case .playing:
+            coverImage.image = UIImage(systemName: "play.fill")
+            return
         case .paused: coverImage.image = UIImage(systemName: "pause.fill")
+            return
         case .stopped: coverImage.image = UIImage(systemName: "music.note")
+            return
         }
+        print("logg")
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
@@ -135,3 +138,4 @@ class ItemTrackView: UIView {
     }
     
 }
+

@@ -10,6 +10,7 @@ import AVFoundation
 
 protocol TrackDelegete {
     func didFinishPlaying()
+    func didChangeState(newState: TrackState, track: Track)
 }
 
 enum TrackState {
@@ -24,11 +25,22 @@ class Track: NSObject {
     var name: String = "City"
     var artist: String = "oxxxymiron"
     var coverImage: UIImage?
-    var delegate: TrackDelegete?
-    private var state: TrackState = .stopped
+    var delegates: [TrackDelegete] = []
+    private var state: TrackState = .stopped {
+        didSet {
+            print("didSet: \(state)")
+            
+            for item in delegates
+            {
+                item.didChangeState(newState: state, track: self)
+            }
+            
+            print("didSet: log")
+        }
+    }
     
     var trackState: TrackState {
-        return state
+        get { return state }
     }
     
     var currentTime: TimeInterval {
@@ -66,7 +78,7 @@ class Track: NSObject {
         state = .playing
     }
     
-    func stop() {
+    func reset() {
         player.stop()
         player.currentTime = 0
         state = .stopped
@@ -75,16 +87,15 @@ class Track: NSObject {
     func rewindTo(newTime: TimeInterval)  {
         player.currentTime = newTime
     }
-    
-    
-    
-    
 
 }
 
 extension Track: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        self.delegate?.didFinishPlaying()
+        for item in delegates
+        {
+            item.didFinishPlaying()
+        }
     }
     
 }
