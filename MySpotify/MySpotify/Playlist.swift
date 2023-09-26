@@ -151,8 +151,4 @@ class Playlist: NSObject {
         currentTrack?.rewindTo(newTime: newTime)
     }
     
-    
-    
-
-    
 }

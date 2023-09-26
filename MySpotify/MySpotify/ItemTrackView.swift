@@ -76,6 +76,7 @@ class ItemTrackView: UIView {
     
     func configure(track: Track) {
         self.track = track
+        self.track.delegates.append(self)
         
         if let coverImage = track.coverImage {
             self.coverImage.image = coverImage
@@ -94,6 +95,7 @@ class ItemTrackView: UIView {
     }
     
     func changeState(newState: TrackState)  {
+        //TODO: Use other image, not cover
         switch newState {
         case .playing:
             coverImage.image = UIImage(systemName: "play.fill")
@@ -103,7 +105,6 @@ class ItemTrackView: UIView {
         case .stopped: coverImage.image = UIImage(systemName: "music.note")
             return
         }
-        print("logg")
     }
     
     func addGradientBackground(to view: UIView, colors: [UIColor], locate: (stat: CGPoint, end: CGPoint)? = nil, locations: [NSNumber]? = nil) -> CAGradientLayer {
@@ -137,5 +138,15 @@ class ItemTrackView: UIView {
         return formatter.string(from: timeInterval) ?? "0:00"
     }
     
+}
+
+extension ItemTrackView: TrackDelegete {
+    func didFinishPlaying() {
+        //ignore
+    }
+    
+    func didChangeState(newState: TrackState) {
+        changeState(newState: newState)
+    }
 }
 

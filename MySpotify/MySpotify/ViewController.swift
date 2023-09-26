@@ -13,7 +13,6 @@ class ViewController: UIViewController {
     var verticalStackView = UIStackView()
     var playlist: Playlist!
     var dataSource = DataSource()
-    var arrayItemViews = [ItemTrackView]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +28,6 @@ class ViewController: UIViewController {
         
         for item in playlist.tracks {
             viewTrack(item)
-            item.delegates.append(self)
         }
         
         gradientView.frame = view.bounds
@@ -63,7 +61,6 @@ class ViewController: UIViewController {
         // Adding tap gesture recognizer to the UIImageView
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         itemTrackView.addGestureRecognizer(tapGesture)
-        arrayItemViews.append(itemTrackView)
     }
     
     @objc func imageTapped(_ sender: UITapGestureRecognizer)  {
@@ -99,23 +96,5 @@ class ViewController: UIViewController {
         return gradientLayer
     }
     
-}
-
-extension ViewController: TrackDelegete {
-   
-    func didChangeState(newState: TrackState, track: Track) {
-        print("VC: \(track.name) \(newState)")
-        for item in arrayItemViews {
-            //item.track.delegates.ap = self
-            if item.track.isEqual(track){
-                item.changeState(newState: newState)
-            }
-        }
-    }
-    
-    func didFinishPlaying() {
-        //ignore
-    }
-        
 }
 

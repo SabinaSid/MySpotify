@@ -10,7 +10,7 @@ import AVFoundation
 
 protocol TrackDelegete {
     func didFinishPlaying()
-    func didChangeState(newState: TrackState, track: Track)
+    func didChangeState(newState: TrackState)
 }
 
 enum TrackState {
@@ -22,20 +22,16 @@ enum TrackState {
 class Track: NSObject {
     
     private var player = AVAudioPlayer()
-    var name: String = "City"
-    var artist: String = "oxxxymiron"
+    var name: String
+    var artist: String
     var coverImage: UIImage?
     var delegates: [TrackDelegete] = []
     private var state: TrackState = .stopped {
         didSet {
-            print("didSet: \(state)")
             
-            for item in delegates
-            {
-                item.didChangeState(newState: state, track: self)
+            for item in delegates {
+                item.didChangeState(newState: state)
             }
-            
-            print("didSet: log")
         }
     }
     
@@ -52,10 +48,11 @@ class Track: NSObject {
     }
     
     init(name: String, artist: String, audioResource: String, audioType: String = "mp3", coverImage: UIImage? = nil) {
-        super.init()
         self.name = name
         self.artist = artist
         self.coverImage = coverImage
+        
+        super.init()
         
         do {
             if let audioPath = Bundle.main.path(forResource: audioResource, ofType: audioType){
@@ -92,8 +89,8 @@ class Track: NSObject {
 
 extension Track: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        for item in delegates
-        {
+        for item in delegates{
+            
             item.didFinishPlaying()
         }
     }

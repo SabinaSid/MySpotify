@@ -326,7 +326,6 @@ class TrackViewController: UIViewController {
     
     @objc func updateTimeLabelsUI() {
         
-        
         if playlist.isPlaying{
         currentTimeLabel.text = timeString(from: track.currentTime)
         timeToEndLabel.text = timeString(from: track.duration - track.currentTime)
@@ -346,8 +345,8 @@ class TrackViewController: UIViewController {
 }
 
 extension TrackViewController: TrackDelegete {
-    func didChangeState(newState: TrackState, track: Track) {
-        print("TrackVC: didChangeState \(newState)")
+    func didChangeState(newState: TrackState) {
+        //ignore
     }
     
     func didFinishPlaying() {
