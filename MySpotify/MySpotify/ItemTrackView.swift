@@ -11,6 +11,7 @@ class ItemTrackView: UIView {
     var track: Track!
     let trackNameLabel = UILabel()
     let coverImage = UIImageView()
+    let stateImage = UIImageView()
     let durationLabel = UILabel()
     let artistNameLabel = UILabel()
     
@@ -34,6 +35,16 @@ class ItemTrackView: UIView {
         coverImage.isUserInteractionEnabled = true
         coverImage.translatesAutoresizingMaskIntoConstraints = false
         addSubview(coverImage)
+        
+        //setup stateImage
+        stateImage.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+        stateImage.contentMode = .scaleAspectFit
+        stateImage.clipsToBounds = true
+        stateImage.backgroundColor = nil
+        stateImage.tintColor = UIColor.lightText
+        stateImage.isUserInteractionEnabled = true
+        stateImage.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stateImage)
         
         //setup trackNameLabel
         trackNameLabel.textAlignment = .right
@@ -61,6 +72,11 @@ class ItemTrackView: UIView {
             coverImage.topAnchor.constraint(equalTo: topAnchor),
             coverImage.widthAnchor.constraint(equalToConstant: 80),
             coverImage.heightAnchor.constraint(equalToConstant: 80),
+            
+            stateImage.leadingAnchor.constraint(equalTo: coverImage.leadingAnchor),
+            stateImage.topAnchor.constraint(equalTo: coverImage.topAnchor),
+            stateImage.widthAnchor.constraint(equalToConstant: 80),
+            stateImage.heightAnchor.constraint(equalToConstant: 80),
             
             trackNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: coverImage.bounds.height/4),
             trackNameLabel.leadingAnchor.constraint(equalTo: coverImage.leadingAnchor, constant: coverImage.bounds.width + 4),
@@ -95,15 +111,16 @@ class ItemTrackView: UIView {
     }
     
     func changeState(newState: TrackState)  {
-        //TODO: Use other image, not cover
+        let imagePaused = UIImage(systemName: "pause.fill")
+        let imagePlaying = UIImage(systemName: "play.fill")
+        
         switch newState {
         case .playing:
-            coverImage.image = UIImage(systemName: "play.fill")
-            return
-        case .paused: coverImage.image = UIImage(systemName: "pause.fill")
-            return
-        case .stopped: coverImage.image = UIImage(systemName: "music.note")
-            return
+            stateImage.image = imagePlaying
+        case .paused:
+            stateImage.image = imagePaused
+        case .stopped:
+            stateImage.image = nil
         }
     }
     
