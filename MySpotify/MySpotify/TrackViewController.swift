@@ -19,6 +19,7 @@ class TrackViewController: UIViewController {
     let nextButton = UIButton(type: .system)
     let backButton = UIButton(type: .system)
     let repeatButton = UIButton(type: .system)
+    let shuffleButton = UIButton(type: .system)
     let currentTimeLabel = UILabel()
     let timeToEndLabel = UILabel()
     
@@ -156,6 +157,14 @@ class TrackViewController: UIViewController {
         setImageOnRepeatButton()
         view.addSubview(repeatButton)
         
+        if let shuffleImage = UIImage(systemName: "shuffle") {
+            shuffleButton.setImage(shuffleImage, for: .normal)
+        }
+        shuffleButton.tintColor = UIColor.white
+        shuffleButton.addTarget(self, action: #selector(shuffleButtonTouch(_:)), for: .touchUpInside)
+        shuffleButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(shuffleButton)
+        
         
 
         
@@ -202,7 +211,12 @@ class TrackViewController: UIViewController {
             repeatButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
             repeatButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -64),
             repeatButton.widthAnchor.constraint(equalToConstant: 50),
-            repeatButton.heightAnchor.constraint(equalToConstant: 50)
+            repeatButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            shuffleButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 8),
+            shuffleButton.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: 128),
+            shuffleButton.widthAnchor.constraint(equalToConstant: 50),
+            shuffleButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         print ("viewDidLoad f")
@@ -268,6 +282,11 @@ class TrackViewController: UIViewController {
     @objc func repeatButtonTouch(_ sender:UIButton) {
         playlist.changeRepeateState()
         setImageOnRepeatButton()
+    }
+    
+    @objc func shuffleButtonTouch(_ sender:UIButton) {
+        shuffleButton.tintColor = UIColor.green
+        //TODO: Mix tracks
     }
     
     func setImageOnRepeatButton(){
