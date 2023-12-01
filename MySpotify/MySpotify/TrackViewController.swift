@@ -27,11 +27,13 @@ class TrackViewController: UIViewController {
     var timer: Timer?
     
     //TODO: Add images to tracks, round image
-    //TODO: Store a state of track to can dismiss modal window with track anf after open it again
-    //TODO: Store a state of track to can dismiss modal window with track and see what track playing now
+    //TODO: ALMOST Store a state of track to can dismiss modal window with track and see what track playing now
     //TODO: Add button to mix up tracks
-    //TODO: Add button to loop track/playlist
     //TODO: Add button to share track
+    //TODO: Get tracks using API
+    //TODO: Add the ability to add a track
+    //TODO: Follow some recommendations
+    //TODO: Add the ability to scroll
     
     override func viewDidLoad() {
         super.viewDidLoad()
