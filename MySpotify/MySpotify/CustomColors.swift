@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomColors: NSObject {
+class CustomColors {
     static let pinkColor = UIColor(red: 254/255, green: 1/255, blue: 169/255, alpha: 0.9)
     static let yellowColor = UIColor(red: 246/255, green: 195/255, blue: 82/255, alpha: 0.9)
     static let blueColor = UIColor(red: 107/255, green: 167/255, blue: 229/255, alpha: 1.0)

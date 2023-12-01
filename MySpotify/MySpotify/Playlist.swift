@@ -151,4 +151,10 @@ class Playlist: NSObject {
         currentTrack?.rewindTo(newTime: newTime)
     }
     
+    func clickTrack(newTrack: Track) {
+        if currentTrack != newTrack {
+            changeTrack(track: newTrack)
+        }
+    }
+    
 }
